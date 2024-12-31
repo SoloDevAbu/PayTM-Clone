@@ -3,7 +3,6 @@ const { User } = require("../db/db");
 const {userInput, updateUserInput} = require("../inputvalidation/userInput");
 const jwt = require('jsonwebtoken');
 
-
 const createUser = async (req, res) => {
     const validation = userInput.safeParse(req.body);
 
@@ -64,6 +63,38 @@ const getUser = async (req, res) => {
     }
 }
 
+//get users that maches a sub-string either the first name or the last name
+const getUserOnSearch = async (req, res) => {
+    const filter = req.query.filter || '';
+
+    try {
+        const users = await User.find({
+            $or: [{
+                firstName: {
+                    '$regex': filter
+                }
+            }, {
+                lastName: {
+                    '$regex': filter
+                }
+            }]
+        })
+    
+        res.status(200).json({
+            user: users.map(user => ({
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                _id: user._id
+            }))
+        })
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
 const updateUser = async (req, res) => {
     const {email} = req.headers;
     const validation = updateUserInput.safeParse(req.body);
@@ -105,5 +136,6 @@ const updateUser = async (req, res) => {
 module.exports = {
     createUser,
     getUser,
+    getUserOnSearch,
     updateUser
 }
