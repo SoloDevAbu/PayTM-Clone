@@ -4,6 +4,7 @@ const {userInput, updateUserInput} = require("../inputvalidation/userInput");
 const jwt = require('jsonwebtoken');
 
 const createUser = async (req, res) => {
+    const randomBalance = Math.floor(Math.random() * (1000 - 10 + 1)) + 10;
     const validation = userInput.safeParse(req.body);
 
     if(!validation.success) {
@@ -27,7 +28,8 @@ const createUser = async (req, res) => {
             lastName,
             username,
             email,
-            password
+            password,
+            ammount: randomBalance
         })
 
         const userId = user._id;
