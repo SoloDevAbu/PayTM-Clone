@@ -1,0 +1,1 @@
+* Just a PayTM like application where users can send someone ammount, search for other user etc. Not an actual PayTM Clone where user can send money in real
